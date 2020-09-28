@@ -1,8 +1,10 @@
 x86 Assembly Mandelbrot and Julia Fractal Program (Linux)
 ==================================================================
 
-![screenshot](fractal1.png) ![screenshot](fractal2.png)
-![screenshot](fractal3.png) ![screenshot](fractal4.png)
+<table>
+<tr><td><img src="fractal1.png" width=396></td><td><img src="fractal2.png" width=396></td></tr>
+<tr><td><img src="fractal3.png" width=396></td><td><img src="fractal4.png" width=396></td></tr>
+</table>
  
 ## Introduction
 
