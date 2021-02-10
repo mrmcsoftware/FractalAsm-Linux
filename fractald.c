@@ -62,7 +62,7 @@ double xres1 = 512.0, yres1 = 512.0, xres = 512.0, yres = 512.0;
 double xres2 = 256.0, yres2 = 256.0;
 double one = 1.0, two = 2.0, converge = 4.0, popped;
 double m, n, xgap, ygap, ac, bc, az, bz, sizev, temp, tempb;
-double aedge, bedge, xdelta, ydelta;
+double aedge = -2.0, bedge = -1.25, xdelta = 3.0, ydelta = 2.5;
 int numpixels = 512*512*4, numpixels1 = 512*512*4, numpixels2 = 512*256*4;
 int off = 0, ncols = 255, count, limit = 1023;
 int pixel, cyinc = 2, cydir = 1;
@@ -334,7 +334,7 @@ unsigned char Colors[256*3] = {
 double aedgeUndo, bedgeUndo, xdeltaUndo, ydeltaUndo;	/* zoom undo vars */
 int zoomgetpoint = 0, zoomtype, keepitsquare = 1;		/* zoom vars */
 int speed = 0, dspeed = 10, pauseit = 0, cycle = 0;		/* color cycle vars */
-int fractaltype;
+int fractaltype = MANDELBROT;
 
 int graphinit(), graphterm(), ProcessEvents();
 
@@ -450,39 +450,41 @@ if (fractaltype == MANDELBROT) { Mandelbrot(); } else { Julia(); }
 int main(int argc, char *argv[])
 {
 int i, l;
-char str[8];
+char str[8], cmd[256];
 XEvent event;
 XKeyEvent kev;
 
 graphinit();
-if (argc == 1) { Choice1(); } // start with first location
+if (argc == 1) { _Mandelbrot(); } // compute 1st location if no commandline args
 // Wait for window to popup
-do { XNextEvent(dpy, &event); } while (event.type != Expose);
+//  Some X11 systems will crash if the window hasn't been mapped yet, so wait
+//  for MapNotify event rather than Expose
+do { XNextEvent(dpy, &event); } while (event.type != MapNotify);
+//do { XNextEvent(dpy, &event); } while (event.type != Expose);
 // fake keypresses so user can initialize the way they want
-if (argc > 1)
+if (argc > 1) { strcpy(cmd, argv[1]); }
+else { strcpy(cmd, "i"); } // just show computed image if no commandline args
+kev.display = dpy;
+kev.window = win;
+kev.state = 0;
+str[1] = '\0';
+l = strlen(cmd);
+for (i=0; i<l; i++)
 	{
-	kev.display = dpy;
-	kev.window = win;
-	str[1] = '\0';
-	l = strlen(argv[1]); // putting strlen in "for" didn't work
-	for (i=0; i<l; i++)
+	kev.type = KeyPress;
+	str[0] = cmd[i];
+	// handle cases that don't work with Keysym/Keycode
+	switch (str[0])
 		{
-		kev.type = KeyPress;
-		str[0] = argv[1][i];
-		// handle cases that don't work with Keysym/Keycode
-		switch (str[0])
-			{
-			case '-': kev.keycode = 20; break;
-			case '.': kev.keycode = 60; break;
-			case ',': kev.keycode = 59; break;
-			default: kev.keycode = XKeysymToKeycode(dpy, XStringToKeysym(str));
-			}
-		XSendEvent(dpy, win, True, KeyPressMask, (XEvent *)&kev);
-		kev.type = KeyRelease;
-		XSendEvent(dpy, win, True, KeyPressMask, (XEvent *)&kev);
+		case '-': kev.keycode = 20; break;
+		case '.': kev.keycode = 60; break;
+		case ',': kev.keycode = 59; break;
+		default: kev.keycode = XKeysymToKeycode(dpy, XStringToKeysym(str));
 		}
+	XSendEvent(dpy, win, True, KeyPressMask, (XEvent *)&kev);
+	kev.type = KeyRelease;
+	XSendEvent(dpy, win, True, KeyPressMask, (XEvent *)&kev);
 	}
-else { XPutImage(dpy, win, gc, ximage, 0, 0, 0, 0, ximage->width, ximage->height); }
 XFlush(dpy);
 while (1)
 	{
@@ -646,6 +648,7 @@ if (XCheckTypedWindowEvent(dpy, win, KeyPress, &event))
 		case 'k': keepitsquare = !keepitsquare; break;
 		case 'p': parameters(); break;
 		case 'r': if (fractaltype == MANDELBROT) { Mandelbrot(); } else { Julia(); } break;
+		case 'i': XPutImage(dpy, win, gc, ximage, 0, 0, 0, 0, ximage->width, ximage->height); break;
 		case 's': SaveImage(); break;
 		case 'h':
 #ifdef HAVE_SDL2

@@ -9,14 +9,16 @@ LFLAGS = -lX11 -lXpm
 #LFLAGS = -lX11
 #LFLAGS = -lX11 -lXpm -lSDL2
 AFLAGS = -f elf64
+#   If you get an error saying "recompile with -fPIE", uncomment the following
+#NOPIE = -no-pie
 
 all: fractald fractalf
 
 fractald: fractald.o routinesd.o
-	$(LD) fractald.o routinesd.o -o fractald $(LFLAGS)
+	$(LD) fractald.o routinesd.o -o fractald $(LFLAGS) $(NOPIE)
 
 fractalf: fractalf.o routinesf.o
-	$(LD) fractalf.o routinesf.o -o fractalf $(LFLAGS)
+	$(LD) fractalf.o routinesf.o -o fractalf $(LFLAGS) $(NOPIE)
 
 routinesd.o: routinesd.asm
 	$(AS) $(AFLAGS) routinesd.asm

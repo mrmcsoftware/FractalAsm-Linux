@@ -32,7 +32,7 @@ what I mean).
 
 Start from either command line or icon (but if by icon, you won't get user
 interface since no associated terminal window).
-Once started, press 'h' to see the various keyboard controls.  Or press
+*Once started, press 'h' to see the various keyboard controls.*  Or press
 '0' through '9', '-', or 'a' to go to preset areas of the fractals.  To zoom,
 press either 'z' for zoom by opposing corners or 'x' for zoom by center to
 corner.  Then click (and hold) left mouse button to select first point and
@@ -79,6 +79,10 @@ for the 64-bit version.
 
 These will make both the double and float versions of the fractal program.
 
+While compiling, if you get an error message saying "... recompile with -fPIE",
+uncomment the *NOPIE = -no-pie* line in the Makefile.64 file.  This might be
+necessary due to changes in newer versions of gcc.
+
 ## Special Linux Version Notes
 
 I wanted to make this program as simple as possible - I didn't want to use
@@ -111,7 +115,7 @@ The user interface is much better.
 <tr><td>Makefile</td><td>Makefile for 32-bit version</td></tr>
 <tr><td>Makefile.64</td><td>Makefile for 64-bit version</td></tr>
 <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>fractalb.asm</td><td>My original fractal program for my CPU design</td></tr>
+<tr><td>fractalb_not_x86.asm</td><td>My original fractal program for my CPU design</td></tr>
 <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 <tr><td>fractald</td><td>ELF 32-bit Linux executable (double version)</td></tr>
 <tr><td>fractalf</td><td>ELF 32-bit Linux executable (float version)</td></tr>
