@@ -31,7 +31,7 @@ what I mean).
 ## Running
 
 Start from either command line or icon.
-*Once started, press 'h' to see the various keyboard controls.*  Or press
+**Once started, press 'h' to see the various keyboard controls.**  Or press
 '0' through '9', '-', or 'a' to go to preset areas of the fractals.  To zoom,
 press either 'z' for zoom by opposing corners or 'x' for zoom by center to
 corner.  Then click (and hold) left mouse button to select first point and
@@ -79,7 +79,7 @@ for the 64-bit version.
 These will make both the double and float versions of the fractal program.
 
 While compiling, if you get an error message saying "... recompile with -fPIE",
-uncomment the *NOPIE = -no-pie* line in the Makefile.64 file.  This might be
+uncomment the **NOPIE = -no-pie** line in the Makefile.64 file.  This might be
 necessary due to changes in newer versions of gcc.
 
 ## Special Linux Version Notes
